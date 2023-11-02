@@ -1,54 +1,62 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import css from './ContactForm.module.css';
 
-export class ContactForm extends Component {
-  state = {
-    name: '',
-    number: '',
-  };
+export const ContactForm = ({ handleAddContact }) => {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
-  handleSubmit = evt => {
+  const handleSubmit = evt => {
     evt.preventDefault();
-    const { name, number } = this.state;
-    this.props.handleAddContact({ name, number });
-    this.setState({ name: '', number: '' });
+    handleAddContact({ name, number });
+    setName('');
+    setNumber('');
   };
 
-  handleChange = ({ target }) => {
-    this.setState({ [target.name]: target.value });
+  const handleChange = evt => {
+    const { name, value } = evt.target;
+    switch (name) {
+      case 'name': {
+        setName(value);
+        return;
+      }
+      case 'number': {
+        setNumber(value);
+        return;
+      }
+      default:
+        return;
+    }
   };
 
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit} className={css.formWrapper}>
-        <label className={css.labelText}>
-          Name
-          <input
-            className={css.inputAdd}
-            type="text"
-            name="name"
-            value={this.state.name}
-            onChange={this.handleChange}
-            pattern="^[a-zA-Zа-яА-Я]+(([' \-][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-            required
-          />
-        </label>
-        <label className={css.labelText}>
-          Number
-          <input
-            className={css.inputAdd}
-            type="tel"
-            name="number"
-            value={this.state.number}
-            onChange={this.handleChange}
-            pattern="\+?\d{1,4}?[ .\-\s]?\(?\d{1,3}?\)?[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,9}"
-            required
-          />
-        </label>
-        <button type="submit" className={css.btnSbm}>
-          Add contact
-        </button>
-      </form>
-    );
-  }
-}
+  return (
+    <form onSubmit={handleSubmit} className={css.formWrapper}>
+      <label className={css.labelText}>
+        Name
+        <input
+          className={css.inputAdd}
+          type="text"
+          name="name"
+          value={name}
+          onChange={handleChange}
+          pattern="^[a-zA-Zа-яА-Я]+(([' \-][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+          required
+        />
+      </label>
+      <label className={css.labelText}>
+        Number
+        <input
+          className={css.inputAdd}
+          type="tel"
+          name="number"
+          value={number}
+          onChange={handleChange}
+          pattern="\+?\d{1,4}?[ .\-\s]?\(?\d{1,3}?\)?[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,4}[ .\-\s]?\d{1,9}"
+          required
+        />
+      </label>
+      <button type="submit" className={css.btnSbm}>
+        Add contact
+      </button>
+    </form>
+  );
+};
